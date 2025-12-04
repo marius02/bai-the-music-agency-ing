@@ -89,13 +89,19 @@ export default function LyricsSelectionWithForm({
   onLyricsSelected,
   isLoading = false,
 }: LyricsSelectionWithFormProps) {
+  // Randomize mood on component mount
+  const getRandomMood = (): "sad" | "chill" | "creative" | "hype" => {
+    const moods: Array<"sad" | "chill" | "creative" | "hype"> = ["sad", "chill", "creative", "hype"];
+    return moods[Math.floor(Math.random() * moods.length)];
+  };
+
   const [selectedLyrics, setSelectedLyrics] = useState<string>("");
   const [formData, setFormData] = useState<MusicFormData>({
     genre: "Upbeat Pop",
     vocalType: "male",
     title: "",
     remixedBy: "",
-    mood: "creative",
+    mood: getRandomMood(), // Randomize mood
   });
   const [recommendedGenre, setRecommendedGenre] = useState<string | null>(null);
   const [isRecommending, setIsRecommending] = useState(false);
@@ -411,73 +417,6 @@ export default function LyricsSelectionWithForm({
                 <p className="text-sm md:text-base text-ing-text">
                   Selectează genul și preferințele vocale pentru piesa ta
                 </p>
-              </div>
-
-              {/* Mood/BPM Slider */}
-              <div className="mb-6 md:mb-8">
-                <label className="block text-ing-dark font-semibold text-base md:text-lg mb-3 md:mb-4 text-center">
-                  Energia & Tempo-ul Piesei
-                </label>
-                <div className="bg-gradient-to-r from-blue-50 via-green-50 via-purple-50 to-red-50 rounded-xl md:rounded-2xl p-4 md:p-6">
-                  {/* Mood Options Grid */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-3 md:mb-4">
-                    {(
-                      Object.keys(moodConfig) as Array<keyof typeof moodConfig>
-                    ).map((moodKey) => {
-                      const mood = moodConfig[moodKey];
-                      const isSelected = formData.mood === moodKey;
-                      return (
-                        <button
-                          key={moodKey}
-                          type="button"
-                          onClick={() =>
-                            setFormData({ ...formData, mood: moodKey })
-                          }
-                          disabled={isLoading}
-                          className={`p-3 md:p-4 rounded-lg md:rounded-xl border-2 transition-all ${
-                            isSelected
-                              ? `border-ing-orange bg-gradient-to-br ${mood.color} text-white shadow-xl scale-105`
-                              : "border-gray-300 bg-white hover:border-ing-orange hover:shadow-md"
-                          } ${
-                            isLoading
-                              ? "opacity-50 cursor-not-allowed"
-                              : "cursor-pointer"
-                          }`}
-                        >
-                          <div className="font-bold text-sm md:text-base mb-2">
-                            {mood.label}
-                          </div>
-                          <div
-                            className={`text-xs md:text-sm ${
-                              isSelected ? "text-white" : "text-gray-600"
-                            }`}
-                          >
-                            {mood.bpm}
-                          </div>
-                          <div
-                            className={`text-[10px] md:text-xs mt-1 ${
-                              isSelected ? "text-white/90" : "text-gray-500"
-                            }`}
-                          >
-                            {mood.description}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Current Selection Info */}
-                  <div className="text-center mt-3 md:mt-4 p-2 md:p-3 bg-white/80 rounded-lg">
-                    <p className="text-xs md:text-sm text-gray-700">
-                      <span className="font-semibold">Selected:</span>{" "}
-                      {moodConfig[formData.mood].label}
-                      <span className="mx-1 md:mx-2">•</span>
-                      <span className="font-semibold">
-                        {moodConfig[formData.mood].bpm}
-                      </span>
-                    </p>
-                  </div>
-                </div>
               </div>
 
               {/* Genre Dropdown */}
