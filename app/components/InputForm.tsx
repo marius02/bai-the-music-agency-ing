@@ -255,11 +255,8 @@ export default function InputForm({
   const handleGenerateLyrics = (e: React.FormEvent) => {
     e.preventDefault();
     if (prompt.trim() && isPromptValid) {
-      // Use manual moods if enabled and 2 selected, otherwise use automatic
-      const finalMoods =
-        useManualMoods && selectedMoods.length === 2
-          ? selectedMoods
-          : getSongMoods(selectedSong);
+      // Always use automatic/randomized moods from getSongMoods
+      const finalMoods = getSongMoods(selectedSong);
       onGenerateLyrics(prompt, selectedSong, finalMoods);
     }
   };
@@ -345,65 +342,6 @@ export default function InputForm({
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Mood Selection */}
-          <div className="space-y-4">
-            <label className="block text-lg font-semibold text-ing-dark">
-              Alege starea piesei tale{" "}
-              <span className="text-sm font-normal text-ing-text">
-                (selectează 2 stări)
-              </span>
-            </label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {moods.map((mood) => (
-                <button
-                  key={mood.value}
-                  type="button"
-                  onClick={() => handleMoodToggle(mood.value)}
-                  disabled={isLoading}
-                  className={`relative p-4 rounded-xl border-2 transition-all duration-300 ${
-                    selectedMoods.includes(mood.value)
-                      ? "border-ing-orange bg-ing-orange/10 shadow-md"
-                      : "border-ing-accent bg-white hover:border-ing-orange/40"
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
-                >
-                  <div className="flex flex-col items-center gap-2 text-center">
-                    <span className="text-3xl">{mood.emoji}</span>
-                    <div className="space-y-1">
-                      <p className="font-semibold text-ing-dark text-sm">
-                        {mood.label}
-                      </p>
-                      <p className="text-xs text-ing-text">
-                        {mood.description}
-                      </p>
-                    </div>
-                  </div>
-                  {selectedMoods.includes(mood.value) && (
-                    <div className="absolute top-2 right-2 w-6 h-6 bg-ing-orange rounded-full flex items-center justify-center">
-                      <svg
-                        className="w-4 h-4 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={3}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-            {selectedMoods.length === 2 && (
-              <p className="text-sm text-ing-orange font-medium text-center">
-                ✓ Perfect! Ai selectat 2 stări pentru piesa ta
-              </p>
-            )}
           </div>
 
           {/* Submit Button */}
